@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# Backend
+backend/venv/
+backend/uploads/
+backend/vector_db/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Env
+.env
+
+# System
+.DS_Store
