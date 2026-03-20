@@ -19,7 +19,9 @@ function Login() {
   // ✅ TOAST STATE
   const [toast, setToast] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+      if (e) e.preventDefault();
+      console.log("CLICK WORKING");
     try {
 
       // SIGNUP FLOW
@@ -261,11 +263,18 @@ function Login() {
 
         {/* BUTTON */}
         <button
+          type="button"
           onClick={handleSubmit}
           className="w-full mt-7 py-3 rounded-lg font-medium bg-gradient-to-r from-purple-500 to-indigo-500 hover:opacity-90 transition"
         >
           {isSignup ? "Create Account" : "Sign In"}
         </button>
+        {/* <button
+          onClick={handleSubmit}
+          className="w-full mt-7 py-3 rounded-lg font-medium bg-gradient-to-r from-purple-500 to-indigo-500 hover:opacity-90 transition"
+        >
+          {isSignup ? "Create Account" : "Sign In"}
+        </button> */}
 
         <p className="text-center text-sm text-gray-400 mt-6">
 
