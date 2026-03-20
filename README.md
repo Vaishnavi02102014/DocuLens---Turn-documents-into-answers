@@ -72,6 +72,7 @@ PDF Upload → Text Extraction → Chunking → Embeddings
 <p align="left">
   <img src="assets/dashboard.png" width="700"/>
 </p>
+
 ### 💬 Chat Interface
 <p align="left">
   <img src="assets/chat.png" width="700"/>
