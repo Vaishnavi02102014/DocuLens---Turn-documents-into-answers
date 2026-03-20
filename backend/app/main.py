@@ -15,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://doculens-gray.vercel.app",
-        "doculens-3y9i9o2uu-vaishnavi02102014s-projects.vercel.app"
+        "https://doculens-3y9i9o2uu-vaishnavi02102014s-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
