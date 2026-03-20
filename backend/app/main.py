@@ -13,10 +13,7 @@ load_dotenv(os.path.join(BASE_DIR, "..", ".env"))
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://doculens-gray.vercel.app",
-        "https://doculens-3y9i9o2uu-vaishnavi02102014s-projects.vercel.app"
-    ],
+    allow_origin_regex="https://.*vercel.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
