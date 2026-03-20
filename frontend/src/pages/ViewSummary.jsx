@@ -22,7 +22,7 @@ export default function ViewSummary() {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `http://127.0.0.1:8000/generate-summary/${filename}`,
+        `${import.meta.env.VITE_API_URL}/generate-summary/${filename}`,
         {
           method: "POST",
           headers: {
@@ -143,7 +143,7 @@ export default function ViewSummary() {
                 const userId = localStorage.getItem("user_id") || 1;
 
                 const pdfUrl =
-                  `http://127.0.0.1:8000/uploads/user_${userId}/${filename}`;
+                  `${import.meta.env.VITE_API_URL}/uploads/user_${userId}/${filename}`;
 
                 window.open(pdfUrl, "_blank");
 

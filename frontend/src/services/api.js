@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://doculens-turn-documents-into-answers.onrender.com"
+  baseURL: import.meta.env.VITE_API_URL
 });
 
 /* ADD TOKEN TO EVERY REQUEST */
