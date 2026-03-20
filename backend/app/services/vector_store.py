@@ -10,6 +10,10 @@ def store_chunks(chunks, user_id: int):
 
     embeddings = create_embeddings()
 
+    if embeddings is None:
+        print("⚠️ Embeddings disabled, skipping vector storage")
+        return None
+
     texts = [chunk["text"] for chunk in chunks]
     metadatas = [chunk["metadata"] for chunk in chunks]
 
@@ -36,6 +40,10 @@ def get_vector_db(user_id: int):
         return ACTIVE_DBS[user_id]
 
     embeddings = create_embeddings()
+
+    if embeddings is None:
+        print("⚠️ Embeddings disabled, skipping vector storage")
+        return None
 
     persist_directory = f"vector_db/user_{user_id}"
 
