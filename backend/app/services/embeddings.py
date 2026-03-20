@@ -5,11 +5,6 @@ _embeddings = None
 def create_embeddings():
     global _embeddings
 
-    # 🚨 DISABLE embeddings on Render (free tier)
-    if os.getenv("RENDER") == "true":
-        print("⚠️ Skipping embeddings on Render")
-        return None
-
     if _embeddings is None:
         from langchain_community.embeddings import HuggingFaceEmbeddings
 

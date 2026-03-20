@@ -96,6 +96,8 @@ async def upload_pdf(
 
     # store chunks in vector DB
     store_chunks(chunks, user_id)
+    if db is None:
+        return {"error": "Embeddings failed"}
 
     return {
         "message": "PDF uploaded successfully",

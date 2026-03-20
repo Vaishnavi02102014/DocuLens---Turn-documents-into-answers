@@ -100,8 +100,7 @@ def generate_summary(filename: str, user_id: int = Depends(get_current_user)):
         return {"error": "No documents uploaded"}
 
     results = db._collection.get(where={"source": filename})
-
-    text_chunks = results["documents"]
+    text_chunks = results.get("documents", [])
 
     if not text_chunks:
         return {"error": "No chunks found"}
