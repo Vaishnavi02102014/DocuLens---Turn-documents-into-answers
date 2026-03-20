@@ -6,6 +6,7 @@ __pycache__/
 backend/venv/
 backend/uploads/
 backend/vector_db/
+backend/app.db
 
 # Frontend
 frontend/node_modules/
