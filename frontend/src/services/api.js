@@ -40,20 +40,6 @@ export const getDocuments = () => API.get("/list-pdfs");
 export const deleteDocument = (filename) =>
   API.delete(`/delete-pdf/${encodeURIComponent(filename)}`);
 
-export const generateSummary = async (filename, token) => {
-  const res = await fetch(
-    `${API.defaults.baseURL}/generate-summary/${filename}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return res.json();
-};
-
 export default API;
 
 // this allows react to communicate the fastAPI backend.

@@ -2,6 +2,7 @@ import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CheckCircle, FileText, Menu } from "lucide-react";
+import API from "../services/api"; // ✅ CORRECT PLACE
 
 export default function ViewSummary() {
 
@@ -19,30 +20,16 @@ export default function ViewSummary() {
 
     try {
 
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/generate-summary/${filename}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      const data = await res.json();
+      const res = await API.post(`/generate-summary/${filename}`);
+      const data = res.data; // ✅ axios uses res.data
 
       if (!data.summary) return;
 
       const parsed = parseSummary(data.summary);
-
       setTopics(parsed);
 
     } catch (error) {
-
       console.error("Summary fetch failed:", error);
-
     }
 
   };
@@ -133,8 +120,6 @@ export default function ViewSummary() {
           </div>
 
           <div>
-
-            {/* CLICKABLE PDF */}
 
             <h2
               className="text-lg font-medium cursor-pointer hover:text-purple-400 transition"
