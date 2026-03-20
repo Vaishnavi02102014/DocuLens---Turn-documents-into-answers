@@ -132,6 +132,7 @@ Create a `.env` file inside backend:
 
 ```env
 GITHUB_TOKEN=your_api_key_here
+JWT_SECRET_KEY=your_secret_key_here
 ```
 
 ---
