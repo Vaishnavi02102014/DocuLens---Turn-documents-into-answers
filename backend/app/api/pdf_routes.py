@@ -50,9 +50,9 @@
 #         "chunks_created": len(chunks)
 #     }
 
-
 from fastapi import APIRouter, UploadFile, File, Depends
 import os
+import threading
 
 from app.services.pdf_processor import extract_text_from_pdf
 from app.services.chunking import chunk_text
@@ -71,40 +71,47 @@ async def upload_pdf(
     user_id: int = Depends(get_current_user)
 ):
 
-    # create user folder
+    # ✅ create user folder
     user_folder = os.path.join(UPLOAD_FOLDER, f"user_{user_id}")
     os.makedirs(user_folder, exist_ok=True)
 
     file_path = os.path.join(user_folder, file.filename)
 
-    # prevent duplicate upload
+    # ✅ prevent duplicate upload
     if os.path.exists(file_path):
         return {"error": f"{file.filename} already exists"}
 
-    # save uploaded file
+    # ✅ save uploaded file
     with open(file_path, "wb") as f:
         f.write(await file.read())
 
-    # extract text from pdf
+    # ✅ extract text
     pages = extract_text_from_pdf(file_path)
 
-    # create chunks
+    # ✅ create chunks
     chunks = chunk_text(pages, file.filename, user_id)
 
     if not chunks:
         return {"error": "No text could be extracted"}
 
-    # store chunks in vector DB
-    store_chunks(chunks, user_id)
-    if db is None:
-        return {"error": "Embeddings failed"}
+    # ✅ STORE CHUNKS (DIFFERENT FOR LOCAL VS RENDER)
 
+    if os.getenv("RENDER") == "true":
+        # 🚀 Render → background (avoid timeout)
+        threading.Thread(
+            target=store_chunks,
+            args=(chunks, user_id)
+        ).start()
+    else:
+        # 💻 Local → direct (better testing)
+        store_chunks(chunks, user_id)
+
+    # ✅ response immediately
     return {
         "message": "PDF uploaded successfully",
         "filename": file.filename,
         "chunks_created": len(chunks)
     }
-
 
 
 # user uploads pdf

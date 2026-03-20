@@ -8,29 +8,40 @@ ACTIVE_DBS = {}
 
 def store_chunks(chunks, user_id: int):
 
+    print(f"📦 Storing chunks for user {user_id}...")
+
     embeddings = create_embeddings()
 
     if embeddings is None:
-        print("⚠️ Embeddings disabled, skipping vector storage")
+        print("⚠️ Embeddings not available, skipping vector storage")
         return None
 
-    texts = [chunk["text"] for chunk in chunks]
-    metadatas = [chunk["metadata"] for chunk in chunks]
+    try:
+        texts = [chunk["text"] for chunk in chunks]
+        metadatas = [chunk["metadata"] for chunk in chunks]
 
-    persist_directory = f"vector_db/user_{user_id}"
-    os.makedirs(persist_directory, exist_ok=True)
+        persist_directory = f"vector_db/user_{user_id}"
+        os.makedirs(persist_directory, exist_ok=True)
 
-    vector_db = Chroma.from_texts(
-        texts=texts,
-        embedding=embeddings,
-        metadatas=metadatas,
-        persist_directory=persist_directory
-    )
+        print("🚀 Creating vector DB...")
 
-    # ✅ track instance
-    ACTIVE_DBS[user_id] = vector_db
+        vector_db = Chroma.from_texts(
+            texts=texts,
+            embedding=embeddings,
+            metadatas=metadatas,
+            persist_directory=persist_directory
+        )
 
-    return vector_db
+        # ✅ track instance
+        ACTIVE_DBS[user_id] = vector_db
+
+        print("✅ Embeddings stored successfully")
+
+        return vector_db
+
+    except Exception as e:
+        print("❌ Error storing embeddings:", str(e))
+        return None
 
 
 def get_vector_db(user_id: int):
@@ -39,26 +50,36 @@ def get_vector_db(user_id: int):
     if user_id in ACTIVE_DBS:
         return ACTIVE_DBS[user_id]
 
+    print(f"📂 Loading vector DB for user {user_id}...")
+
     embeddings = create_embeddings()
 
     if embeddings is None:
-        print("⚠️ Embeddings disabled, skipping vector storage")
+        print("⚠️ Embeddings not available, cannot load vector DB")
         return None
 
     persist_directory = f"vector_db/user_{user_id}"
 
     if not os.path.exists(persist_directory):
+        print("⚠️ No vector DB found")
         return None
 
-    db = Chroma(
-        persist_directory=persist_directory,
-        embedding_function=embeddings
-    )
+    try:
+        db = Chroma(
+            persist_directory=persist_directory,
+            embedding_function=embeddings
+        )
 
-    # ✅ track instance
-    ACTIVE_DBS[user_id] = db
+        # ✅ track instance
+        ACTIVE_DBS[user_id] = db
 
-    return db
+        print("✅ Vector DB loaded successfully")
+
+        return db
+
+    except Exception as e:
+        print("❌ Error loading vector DB:", str(e))
+        return None
 
 
 # ✅ CRITICAL: force close DB
@@ -66,13 +87,17 @@ def close_vector_db(user_id: int):
 
     if user_id in ACTIVE_DBS:
         try:
+            print(f"🧹 Closing vector DB for user {user_id}")
+
             db = ACTIVE_DBS[user_id]
 
-            # try to release internal client
+            # release internal client if exists
             if hasattr(db, "_client"):
                 db._client = None
 
             del ACTIVE_DBS[user_id]
 
+            print("✅ Vector DB closed")
+
         except Exception as e:
-            print("Error closing DB:", e)
+            print("❌ Error closing DB:", str(e))
