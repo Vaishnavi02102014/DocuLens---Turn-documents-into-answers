@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000"
+  baseURL: "https://doculens-turn-documents-into-answers.onrender.com"
 });
 
 /* ADD TOKEN TO EVERY REQUEST */
@@ -42,7 +42,7 @@ export const deleteDocument = (filename) =>
 
 export const generateSummary = async (filename, token) => {
   const res = await fetch(
-    `http://127.0.0.1:8000/generate-summary/${filename}`,
+    `${API.defaults.baseURL}/generate-summary/${filename}`,
     {
       method: "POST",
       headers: {
